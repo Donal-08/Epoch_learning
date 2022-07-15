@@ -1,0 +1,143 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\title{Linear Regression Report}
+\author{Donal Loitam(AI21BTECH11009)}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item \textbf{Regression} shows a line or curve that passes through all the data points on a target-predictor graph s.t  the vertical distance between 
+    the data points and the regression line is minimum.
+    \item Linear regression shows the linear relationship between the independent variable (X-axis) and the dependent variable (Y-axis), consequently called linear regression
+    \item The below graph gives the linear relationship between the dependent and independent variables.
+\end{itemize}
+\begin{figure}[h!]
+    \includegraphics[width=0.6\linewidth]{fig3.png}
+    \caption{Linear graph $y = mx +c $}
+    \label{fig:fig3}
+  \end{figure}
+\begin{itemize}
+    \item The red line is referred to as the best fit straight line. Based on the given data points, we try to plot a line that models the points the best.
+    \item To calculate best-fit line linear regression uses a traditional slope-intercept form.
+\end{itemize}
+\begin{align}
+    h(x) = mx + c = a_0 + a_1 x
+\end{align}
+\pagebreak
+
+\section{Key Points of the Algorithm}
+Let for our simplicity, we have only 2 parameters $a_0$ and $a_1$ i.e we work on 2-Dimensions\\
+The goal of the algorithm is to get the best values of $a_0$ and $a_1$, to find the best fit line.
+The best fit line should have the least error i.e the error between predicted values and actual values be minimized.
+The \textbf{cost function $(J(a))$} in Linear Regression is defined by \textbf{Mean Squared Error(MSE)} 
+\begin{figure}[h!]
+    \includegraphics[width=0.5\linewidth]{fig4.png}
+    \caption{Linear graph $y = mx +c $}
+    \label{fig:fig4}
+  \end{figure}
+\begin{align}
+    J(a) = \frac{1}{2} \sum_{i = 1}^m (h_a(x^{(i)})-y^{(i)})^2 
+\end{align}
+where our hypothesis is $h_a(x)$ , a = weights/parameters, x = inputs be defined as :
+\begin{align}
+    &h_w(x) = a_0 + a_1x_1 + ....... 
+\end{align}
+ and $m$  = no. of training samples, $(x^{(i)},y^{(i)})$ = i'th training sample\\
+But how do we get the values of $a_0,a_1$ which minimises the cost function.For this we use a method called 
+\textbf{Gradient Descent} \\
+\hspace{5mm} A regression model uses gradient descent to update the coefficients of the line $(a0, a1 \implies xi, b)$ by 
+reducing the cost function by a random selection of coefficient values and then iteratively update the values to reach the minimum cost function.
+\begin{figure}[h!]
+    \includegraphics[width=0.6\linewidth]{fig5.png}
+    \caption{Linear graph $y = mx +c $}
+    \label{fig:fig3}
+  \end{figure}
+We repeat the algorithm until it converges to the global minima i.e update the parameter as follows: (every iteration)
+\begin{align}
+    a^{(i)} &= a^{(i)} - \alpha .(\diffp{cost}{a^{(i)}})\\
+\end{align}
+where, $\alpha =$ learning rate\\
+For simplification, assume only one training sample($m = 1$) 
+\begin{align}
+    \diffp{cost}{a^{(i)}} &= \diffp{}{a^{(i)}} \frac{1}{2}(h_a(x)-y)^2 \\
+    &= (h_a(x)-y) \diffp{}{a^{(i)}} (h_a(x)-y)\\
+    &= (h_a(x)-y) \diffp{}{a^{(i)}} (a_0 + a_1x_1 + ...... a_ix_i .... -y)\\
+    &= (h_a(x)-y). x_i
+\end{align}
+Now since derivaive of the sum = sum of derivative , we can generalise this for m trianing samples
+Repeat unitl convergence ,
+\begin{align}
+    w_j &= w_j - \alpha \sum_{i=1}^{m}(h_w(x^{(i)} - y^{(i)}).x_j^{(i)}\\
+\end{align}
+
+\section{Why does it work ?} 
+It turns out that when you plot the cost function $J(a)$ for linear regression, it is a concave up quadratic graph as in \ref{fig:fig6} and hence the only local minima is a \textbf{global minima.} \\
+Imagine a pit in the shape of U. You are standing at the topmost point in the pit, and your objective is to reach the bottom of the pit. In gradient descent algorithm, we are always travelling in the direction of gradient (essentially the direction of steepest descent) and hence at one point of time we will converge to the minima.\\
+\begin{figure}[h!]
+    \includegraphics[width=0.7\linewidth]{fig6.png}
+    \caption{$J(a) /$ cost function}
+    \label{fig:fig6}
+  \end{figure}
+  The partial derivates are the gradients, and they are used to update the values of a0 and a1. Alpha is the learning rate.
+ \\ \textbf{Note:} As seen inthe fig $\alpha$ should not be too big because we may never converge to the global minima if we take huge steps
+Similarly $\alpha$ shouldn't be too small as it will increase computatipnal power and time.
+
+% \section{Unique Features}
+
+% We did some experiments \ldots
+
+% \pagebreak
+
+\section{Some Questions}
+1.When is Linear regression suitable and how can we know that from a given dataset?\\
+\textbf{Ans.} \\
+%  The inputs given to a Logistic Regression model need to be numeric.
+% So we assign each class of the categorical variable a unique numeric value(\textbf{dummy variable}), which can then be treated as any other numeric value.\\
+2. What are the basic assumptions of Linear Regression ? \\
+\textbf{Ans.}\\
+% \begin{itemize}
+% \item There is minimal collinearity among the independent variables i.e. predictors are not correlated.
+%  \item The dependent variable must be categorical in nature.
+% \end{itemize}
+3. In linear regression, what is the value of the \textbf{sum of the residuals/distance} for a given dataset? Justify ! \\
+\textbf{Ans} \\
+%  Yes,we can use a method known as \textbf{"one vs all"}. In this method, a number of models are trained, which is equal to the number of classes.\\
+% Say for instance, the first model classifies the data as \textbf{class 1} or \textbf{not class 1}, the second model classifies them into  \textbf{class 2} or \textbf{not class 2} and so on....\\
+% This way we can check each data point over all the classes.\\
+4. Why do we square the residuals(M.S.E) instead of using absolute residuals? \\
+\textbf{Ans.} \\
+% In Logistic Regression, we use the sigmoid function to perform a non-linear transformation
+%  to obtain the probabilities. If we square this nonlinear transformation, then it will lead to the problem of 
+%  non-convexity with local minimums and by using gradient descent in such cases, it is not possible to find the global minimum,
+%   it may end up to a local minima. Hence in the LOgistic Regression ALgorithm, we used log loss as a cost function as optimizing this function, we can achieve convergence
+5.What is Multicollinearity and how do we detect them ? 
+\\ \textbf{Ans. } \\
+% \begin{itemize}
+%     \item Distribution of error terms : The distribution of data in the case of Linear and Logistic Regression is different. It assumes that error terms are normally distributed. But this assumption does not hold true in the case of binary classification.
+%     \item Output of LInear regression: IN Linear regression, the output is continuous(or numeric) which is of not much use for binary classification. On the contrary, Logistic Regression can predict values between 0 and 1 which can then be mapped with probabilty to predict label as 0 or 1
+% \end{itemize}
+
+\bibliographystyle{abbrv}
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
