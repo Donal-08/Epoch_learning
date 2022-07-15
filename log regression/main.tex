@@ -1,0 +1,130 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\title{Logisitic Regression Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item Logistic Regression is a classification algorithm used for predicting the categorical 
+    dependent variable(like Yes/No, True/False, 0/1) using a given set of independent variables.
+    \item Instead of giving the exact value as 0 and 1, it gives the probabilistic values($0\le Pr \le 1$) and
+    $Pr < 0.5 \implies \text{(category 1)}$ , else (not category 1) 
+    \item In Logistic regression, instead of fitting a regression line, we fit an "S" shaped logistic function, which predicts two maximum values (0 or 1).
+\end{itemize}
+\begin{figure}
+    \includegraphics[width=0.6\linewidth]{fig1.png}
+    \caption{Sigmoid graph}
+    \label{fig:fig1}
+  \end{figure}
+
+\pagebreak
+
+\section{Key Points of the Algorithm}
+As we can see in fig \ref{fig:fig1}, to fit the categorical datas more appropriately we use the sigmoid function $\sigma(z)$
+It maps any real value into another value within a range of 0 and 1.
+\begin{align}
+    \sigma(z) = \frac{1}{1+e^{-z}} \hspace{10mm}\in[0,1]
+\end{align}
+Define our hypothesis as $h_w(x)$ where w = weights/parameters, x = inputs and $\hat{y}$ be defined as :
+\begin{align}
+    &h_w(x) = \sigma(w^Tx) = \frac{1}{1+e^{-w^Tx}}\\
+   \text{Let} \hspace{5mm}&\hat{y} = P(y=1|x;w) = h_w(x)  \\
+    &\therefore P(y=0|x;w) = 1 - h_w(x) 
+\end{align}
+\begin{align}
+    \hat{y} =
+    \begin{cases}
+        1\hspace{15mm} h(x) \ge 0.5 \\
+        0 \hspace{15mm} h(x) < 0.5
+    \end{cases}
+\end{align}
+ Cost function or the log loss function ($J(w)$) be defined as :\\
+\begin{align}
+    L(w) = J(w) = \frac{-1}{m} \sum_{i=1}^{m} \hspace{2mm}[\hspace{2mm}y log (\hat{y}) + (1-y)log(1-\hat{y})]
+\end{align}
+where m = number of datapoints, n = no. of features \\
+Our goal is to choose the parameters so as to minimise the cost function as we train our model, for that we can use Gradient Descent Algorithm
+We repeat the algorithm until it converges to the global minima i.e update the parameter as follows: (every iteration)
+\begin{align}
+    w^{(i)} &= w^{(i)} - \alpha .(\diffp{cost}{w^{(i)}})\\
+    b &= b - \alpha .(\diffp{cost}{b}) \hspace{8mm} \text{where,  } b = w^0
+\end{align}
+where, $\alpha =$ learning rate\\
+After calculations, the bove equations can be simplified to :
+\begin{align}
+    w_i &= w_i - \alpha \sum_{j=1}^{m}(y^{(j)} - h_w(x^{(j)}))x_i^{(j)}\\
+\end{align}
+
+\section{Why does it work ?} 
+It turns out that the log likelihood function $L(w)$ for logistic regression is a concave up graph as in \ref{fig:fig2} and hence the only minima is a global minima.
+
+
+\begin{figure}[ht!]
+    \includegraphics[width=0.4\linewidth]{fig2.png}
+    \caption{Sigmoid graph}
+    \label{fig:fig2}
+  \end{figure}
+
+What the gradient $(\diffp{cost}{w})$ represents is the direction of steepest descent and because gradient is defined that way.
+While $\alpha$ represents the magnitude of baby step which we will take in the direction of gradient. And since we are taking steps towards the global minima, we will eventually be able to minimse the cost function\\
+ \textbf{Note:} $\alpha$ should not be too big because we may never converge to the global minima if we take huge steps
+Similarly $\alpha$ shouldn't be too small as it will increase computatipnal power and time.
+
+\pagebreak
+
+% \section{Unique Features}
+
+% We did some experiments \ldots
+
+% \pagebreak
+
+\section{Some Questions}
+1. How do we tackle categorical variables in Logistic Regression ?\\
+\textbf{Ans.}  The inputs given to a Logistic Regression model need to be numeric.
+So we assign each class of the categorical variable a unique numeric value(\textbf{dummy variable}), which can then be treated as any other numeric value.\\
+2. What are the assumptions of Logistic Regression ? \\
+\textbf{Ans.}
+\begin{itemize}
+\item There is minimal collinearity among the independent variables i.e. predictors are not correlated.
+ \item The dependent variable must be categorical in nature.
+\end{itemize}
+3. Can we solve multiclass classification problems using Logisitic Regression? How? \\ 
+\textbf{Ans} Yes,we can use a method known as \textbf{"one vs all"}. In this method, a number of models are trained, which is equal to the number of classes.\\
+Say for instance, the first model classifies the data as \textbf{class 1} or \textbf{not class 1}, the second model classifies them into  \textbf{class 2} or \textbf{not class 2} and so on....\\
+This way we can check each data point over all the classes.\\
+4. Why can't we use Mean Square Error(MSE) as cost function for Logistic Regression ? \\
+\textbf{Ans.} In Logistic Regression, we use the sigmoid function to perform a non-linear transformation
+ to obtain the probabilities. If we square this nonlinear transformation, then it will lead to the problem of 
+ non-convexity with local minimums and by using gradient descent in such cases, it is not possible to find the global minimum,
+  it may end up to a local minima. Hence in the LOgistic Regression ALgorithm, we used log loss as a cost function as optimizing this function, we can achieve convergence
+5. Why can't we use Linear Regression in place of LOgistic Regression for Binary Classification ?
+\\ \textbf{Ans. } \begin{itemize}
+    \item Distribution of error terms : The distribution of data in the case of Linear and Logistic Regression is different. It assumes that error terms are normally distributed. But this assumption does not hold true in the case of binary classification.
+    \item Output of LInear regression: IN Linear regression, the output is continuous(or numeric) which is of not much use for binary classification. On the contrary, Logistic Regression can predict values between 0 and 1 which can then be mapped with probabilty to predict label as 0 or 1
+\end{itemize}
+
+\bibliographystyle{abbrv}
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
