@@ -1,0 +1,173 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\title{Logisitic Regression Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item One of the easiest algorithm in machine learning as it does not involve much mathematics.
+    \item A Decision Tree is a supervised machine learning algorithm that can be used for both Regression and Classification problem statements
+    \item It uses a flowchart like a tree structure  wherein internal nodes represent conditions and we check at every nodes if that condition is satisfied and split accordingly until it reaches a leaf(Decision). As for instance, see the tree below
+\end{itemize}
+\begin{figure}[h!]
+    \includegraphics[width=0.7\linewidth]{fig7.png}
+    \caption{Example of a Decision tree: Is a person fit ?}
+    \label{fig:fig7}
+  \end{figure}
+
+\pagebreak
+
+\section{Key Points of the Algorithm}
+So, what is actually going on in the background? Growing a tree involves deciding on which features to choose and what conditions to use for splitting, along with knowing when to stop ?\\
+\vspace{3mm}
+What we generally use for decision trees is the Recursive Binary splitting \\
+\textbf{Recursive Binary Split :} All the features are considered and different split points are tried using a cost function(we will discuss one later). The split with the least cost is selected. This method is recursive as we can
+recursively apply this to the remaining groups and continue splitting.Due to which, it is also called the \textbf{greedy algorithm} as we are choosing the least cost at every step.\\ Note that in our example in fig \ref*{fig:fig7} the split that costed least 
+was the \textbf{Age} \vspace{3mm} \\
+\textbf{Cost function :} If the dataset consists of N attributes then deciding which attribute to place at the root or at different levels of the tree as internal nodes is a complicated step. So we have a bunch of criterias/methods that can be used as:
+\textbf{Entropy, Information Gain, Gini Index}.We use Gini Index\\
+\textbf{Gini Index :} Gini impurity is a function that determines how well a decision tree was split. Basically, it helps us to determine which splitter is best so that we can build a pure decision tree. Gini impurity ranges values from 0 to 0.5. 
+\begin{itemize}
+    \item Gini Index works with the categorical target variable “Success” or “Failure”. It performs only Binary splits.
+    \item Lower the Gini ,the better is that feature 
+\end{itemize}
+\begin{align}
+    \text{Gini} = 1 - \sum_{i=1}^{n}(p_i)^2 \hspace{10mm}\in[0,0.5]
+\end{align}
+where, $p_i$ is the probability of an object being classified to a particular class.\\
+\textbf{Steps to Calculate Gini index for a split} \\
+\textbf{(1)} Calculate Gini for sub-nodes, using the above formula for success(p) and failure(q) (p²+q²). \\
+\textbf{(2) }Calculate the Gini index for split using the weighted Gini score of each node of that split.\\
+\textbf{Calculating the Gini Index for Past Trend}\\
+\textbf{Illustration:}  \\
+\begin{center}
+    \begin{tabular}{||c c c c||} 
+     \hline
+     Past Trend & Open Interest & Trading Volume & Return \\ [0.5ex] 
+     \hline\hline
+     + & Low & High & Up \\ 
+     \hline
+     - & High & Low & Down \\
+     \hline
+     + & Low & High & Up\\
+     \hline
+     + & high & High & Down \\
+     \hline
+     - & Low & High & Down \\ 
+     \hline
+     + & Low & Low & Down \\
+     \hline
+     - & High & High & Down \\
+     \hline
+     - & Low & High & Down\\
+     \hline
+     + & Low & Low & Down\\
+     \hline
+     + & High & High & Up \\[1ex] 
+     \hline
+    \end{tabular}
+    \end{center}
+
+
+P(Past Trend=Positive): 6/10
+
+P(Past Trend=Negative): 4/10
+\begin{itemize}
+\item If (Past Trend = Positive and Return = Up), probability = 4/6
+\item If (Past Trend = Positive and Return = Down), probability = 2/6
+\end{itemize}
+
+$\text{Gini index} = 1 - ((4/6)^2 + (2/6)^2) = 0.45$
+
+\begin{itemize}
+\item If (Past Trend = Negative and Return = Up), probability = 0
+\item If (Past Trend = Negative and Return = Down), probability = 4/4
+\end{itemize}
+$\text{Gini index} = 1 - ((0)^2 + (4/4)^2) = 0$
+
+Weighted sum of the Gini Indices can be calculated as follows: \\
+\textbf{Gini Index for Past Trend = (6/10)0.45 + (4/10)0 = 0.27} \vspace{2mm}\\
+Similarly , we calculate for \textbf{Open Interest} = 0.47 and for \textbf{Trading Volume} = 0.34. Since gini for past trend is the least we take it to br the parent node.
+
+\section{How to avoid/counter Overfitting in Decision Trees?} 
+You must be asking this question to yourself that when do we stop growing our tree? Usually, real-world datasets have a large number of features,
+Such trees take time to build and can lead to overfitting.If there is no limit set on a decision tree, it will give you 100 \% accuracy on the training data set because in the worse case it will end up making 1 leaf for each observation
+One way to remove overfitting is :
+
+\textbf{Pruning Decision Trees :}  It helps in improving the performance of the tree on unseen \textbf{test datasets} by cutting the nodes or sub-nodes which are not significant
+\\ \textbf{Post pruning -} (Minimum error). The tree is pruned back to the point where the cross-validated error is a minimum. Cross-validation is the process of building a tree with most of the data and then using the remaining part of the data to test the accuracy of the decision tree.
+\\ \textbf{Pre pruning -} At each stage of splitting the tree, we check the cross-validation error. If the error does not decrease significantly enough then we stop.
+
+
+% \section{Unique Features}
+
+% We did some experiments \ldots
+
+% \pagebreak
+
+\section{Some Questions}
+1. Explain the CART Algorithm for Decision Trees.\\
+\textbf{Ans.}  The CART stands for Classification and Regression Trees is a greedy algorithm that searches for a best split at the top level, then repeats the same process at each of the remaining levels.
+The solution provided by the greedy algorithm is not guaranteed to be optimal, it often produces a solution that’s reasonably good since finding the optimal Tree is an NP-Complete problem that requires exponential time complexity.\\
+2. Briefly explain the properties of Gini Impurity. \\
+\textbf{Ans.} Let X (discrete random variable) takes values $y_+$ and $y_-$ (two classes). Now, consider :
+\begin{itemize}
+\item \textbf{Case 1} When 100\% observations belong to $y_+$ / $y_-$
+\begin{align}
+    Gini  = 1 - (1^2+0^2) = 0
+\end{align}
+\item \textbf{Case 2} When 50\% observations belong to $y_+$ 
+\begin{align}
+    Gini  = 1 - ((0.5)^2+(0.5)^2) = 0.5
+\end{align}
+\end{itemize}
+\begin{figure}[h!]
+    \includegraphics[width=0.7\linewidth]{fig8.png}
+    \caption{Gini}
+    \label{fig:fig8}
+  \end{figure}
+3.  Do we require Feature Scaling for Decision Trees? Explain. \\ 
+\textbf{Ans} Decision tree based models take decisions on the basis of parameters.
+
+Say you have a variable "Age"(take multiple values). Now in a decision tree model, a tree is formed on the basis of micro decisions that the algorithm makes to form a tree. And example of this micro decision could be,
+
+If $20 > Age > 30$. (either Yes/No) \\
+Now let those feature values were to be scaled down let's say by 100
+
+$0.2 > Age/100 > 0.3$ even then the decision wouldn't have changed. Keep in mind the value of Age too has been scaled down by 100.
+
+Hence, decision tree models don't require scaling of feature values.\\
+4. List down the problem domains in which Decision Trees are most suitable. \\
+\textbf{Ans.}  
+\begin{itemize}
+    \item Decision Trees are most suitable for tabular data.
+    \item  The outputs are discrete.
+\end{itemize}          
+5. List down some popular algorithms used for deriving Decision Trees along with their attribute selection measures.\\
+\textbf{Ans} ID3 (Iterative Dichotomiser): Uses Information Gain as attribute selection measure. \\
+CART (Classification and Regression Trees) – Uses Gini Index as attribute selection measure.
+\bibliographystyle{abbrv}
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
