@@ -111,28 +111,45 @@ Similarly $\alpha$ shouldn't be too small as it will increase computatipnal powe
 
 \section{Some Questions}
 1.When is Linear regression suitable and how can we know that from a given dataset?\\
-\textbf{Ans.} \\
+\textbf{Ans.} Generally for 1 independent variable, a Scatter plot is used to see if linear regression is suitable for any given data.
+And if the plot looks somewhat linear then we can go for linear regression but for more than one independent variable, then two-dimensional pairwise scatter plot can be used 
+.\\ 
 %  The inputs given to a Logistic Regression model need to be numeric.
 % So we assign each class of the categorical variable a unique numeric value(\textbf{dummy variable}), which can then be treated as any other numeric value.\\
 2. What are the basic assumptions of Linear Regression ? \\
-\textbf{Ans.}\\
+\textbf{Ans.} \begin{itemize}
+    \item The relationship between the features(independent variables) and target(dependent variable).
+    \item There is no multicollinearity between the features i.e There does not exist a linear dependency between the independent variables
+    \item The error(residuals) are normally distributed.
+\end{itemize}
 % \begin{itemize}
 % \item There is minimal collinearity among the independent variables i.e. predictors are not correlated.
 %  \item The dependent variable must be categorical in nature.
 % \end{itemize}
 3. In linear regression, what is the value of the \textbf{sum of the residuals/distance} for a given dataset? Justify ! \\
-\textbf{Ans} \\
+\textbf{Ans} Since the error/reiduals/distance is assumed to follow normal distribution in case of linear regression, expected value or mean equal to 0.
+\begin{align}
+    Mean &= \frac{1}{m} \sum_{i=1}^m (residuals) \\
+    \because Mean &= 0 \implies \sum (residuals) = 0
+\end{align}
+The sum of the residuals in a linear regression model is 0 \\
 %  Yes,we can use a method known as \textbf{"one vs all"}. In this method, a number of models are trained, which is equal to the number of classes.\\
 % Say for instance, the first model classifies the data as \textbf{class 1} or \textbf{not class 1}, the second model classifies them into  \textbf{class 2} or \textbf{not class 2} and so on....\\
 % This way we can check each data point over all the classes.\\
 4. Why do we square the residuals(M.S.E) instead of using absolute residuals? \\
-\textbf{Ans.} \\
+\textbf{Ans.}  In mathematical terms, the squared function is differentiable everywhere, while the absolute error is not differentiable at all the points 
+in its domain(its derivative is undefined at 0). So while optimising squared error, we can differentiate it and equal it to 0, but we will have more computational headache for absolute residuals. \\
 % In Logistic Regression, we use the sigmoid function to perform a non-linear transformation
 %  to obtain the probabilities. If we square this nonlinear transformation, then it will lead to the problem of 
 %  non-convexity with local minimums and by using gradient descent in such cases, it is not possible to find the global minimum,
 %   it may end up to a local minima. Hence in the LOgistic Regression ALgorithm, we used log loss as a cost function as optimizing this function, we can achieve convergence
-5.What is Multicollinearity and how do we detect them ? 
-\\ \textbf{Ans. } \\
+5.) What is Multicollinearity and how do we detect them ? 
+\\ \textbf{Ans. } Multicollinearity happens when independent variables in the regression model are highly correlated to each other  i.e. one variable can be linearly predicted with the help of other variables. To detect it : \\
+\textbf{ Correlation coefficient: }The first simple method is to plot the correlation matrix of all the independent variables. \\
+\textbf{VIF :}With the help of Variance inflation factor (VIF) for each independent variable\\
+ VIF = 1, no correlation between the independent variable and the other variables.\\
+VIF $>$ 5 or 10 indicates high multicollinearity between this independent variable and the others.
+\\
 % \begin{itemize}
 %     \item Distribution of error terms : The distribution of data in the case of Linear and Logistic Regression is different. It assumes that error terms are normally distributed. But this assumption does not hold true in the case of binary classification.
 %     \item Output of LInear regression: IN Linear regression, the output is continuous(or numeric) which is of not much use for binary classification. On the contrary, Logistic Regression can predict values between 0 and 1 which can then be mapped with probabilty to predict label as 0 or 1
