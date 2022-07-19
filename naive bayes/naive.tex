@@ -1,0 +1,166 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\title{Naive Bayes Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item A Naive Bayes classifier is a probabilistic machine learning model that’s used for classification task
+    \item  The crux of the classifier is based on the \textbf{Bayes theorem}
+    \item It is a probabilistic classifier, which means it predicts on the basis of the probability of an object.
+\end{itemize}
+\textbf{Explaining the terms:}\\
+\textit{Naive : } It assumes the occurence of a certain feature is independent of the occurence of other features i.e any pair of features are independent
+\begin{align}
+    p(X_2|X_1,y) = p(X_2|y) \hspace{8mm} \because \text{[X1,X2 independent]}
+\end{align}
+\textit{Bayes Theorem :} Now we will understand this rule, which is used to determine the probability of a hypothesis with prior knowledge. It depends on the conditional probability.
+\begin{align}
+    P(H|E) = \frac{P(H).P(E|H)}{P(E)}
+\end{align}
+where , $P(H|E)$ = Posterior probability: Probability a hypothesis H is true given some evidence E.\\
+$P(E|H)$ = Likelihood : Probability of the evidence if the hypothesis is true,\\
+$P(H)$ = Prior : Prob a hypothesis is True (before any evidence) \\
+$P(E) = $ Probability of seeing the evidence  \vspace{6mm}\\
+\textbf{Note}: The assumptions made by Naïve Bayes are generally not correct in real-world situations. The independence assumption is never correct but often works well in practice
+\pagebreak
+
+\section{Key Points of the Algorithm}
+Let us take an example to get some better idea about the algorithm. Consider the following example,which is essentially a Car theft problem with attributes Color, Tyoe, Origin, and the target(Stolen) can either be Yes/No.\\
+\vspace{3mm}
+\textbf{Illustration table:}  \\
+\begin{center}
+    \begin{tabular}{|c| c| c| c|} 
+     \hline
+     Color & Type & Origin & Stolen ? \\ [0.5ex] 
+     \hline\hline
+     red & sports & Domestic & Yes \\ 
+     \hline
+     red & sports & Domestic & No \\
+     \hline
+    red & sports & Domestic & Yes\\
+     \hline
+    yellow & sports & Domestic & No \\
+     \hline
+     yellow & sports & Imported & Yes \\ 
+     \hline
+     yellow & SUV & Imported & No \\
+     \hline
+     yellow & SUV & Imported & Yes \\
+     \hline
+     yellow & SUV & Domestic & No\\
+     \hline
+     red & SUV & Imported & No\\
+     \hline
+     red & sports & Imported & Yes \\[1ex] 
+     \hline
+    \end{tabular}
+    \end{center}
+
+Let us now understand about the assumptions made with the help of this example :
+\begin{itemize}
+    \item No pair of features are dependent : example , the color being "yellow" has nothing to do with the origin of the car 
+\end{itemize}
+\textbf{GOAL: to classify a Red Domestic SUV is getting stolen or not } \\
+Note that there is no example of a red domestic SUV in our example.\\
+\textbf{Solution :} According to the example, we can rewrite Bayes Theorem as :
+\begin{align}
+    P(y|X) &= \frac{P(X|y)P(y)}{P(X)} \label{bayes}\\
+    \text{where,   }X &= (x_1,x_2,...,x_n)
+\end{align}
+The variable y is the class variable(stolen?), which represents if the car is stolen or not given the conditions.
+In our example, $x_1,x_2,x_3$  = Color, Type, Origin. Also,
+\begin{align}
+    P(X|y) &= P(x_1,x_2,x_3|y)\\
+        &=P(x_1|y)P(x_2|x_1,y)P(x_3|x_1,x_2,y)\\
+        &=P(x_1|y)P(x_2|y)P(x_3|y) \hspace{18mm} [\because x_i's \text{   are independent}]\\
+    P(X) &= P(x_1,x_2,x_3) = P(x_1)P(x_2)P(x_3)
+\end{align}
+Hence eq \refeq{bayes} can be rewritten as :-
+\begin{align}
+    P(y|X) &= \frac{P(x_1|y)P(x_2|y)P(x_3|y)P(y)}{ P(x_1)P(x_2)P(x_3)} \label{bayes_new}\\
+\end{align}
+Our aim is to find the maximum between $P(Y=Yes|X)$ and $P(Y=\text{No}|X)$ . From eq \refeq{bayes_new} , we can deduce that 
+$P(y|X)\propto P(y) \prod_{i=1}^{3}P(x_i|y) $ 
+\begin{itemize}
+    \item First, we create a frequency table for eaxh attribute against the target.
+    \item Then , we mold the freq tables to Likelihood Tables
+\end{itemize}
+\pagebreak
+Below are the Frequency and likelihood tables for all three predictors.\\
+\begin{figure}[ht!]
+    \includegraphics[width=0.7\linewidth]{fig1.png}
+    \caption{Frequency and Likelihood tables of ‘Color’}
+    \label{fig:fig1}
+  \end{figure}
+  \begin{figure}[ht!]
+    \includegraphics[width=0.7\linewidth]{fig2.png}
+    \caption{Frequency and Likelihood tables of 'Type'}
+    \label{fig:fig2}
+  \end{figure}
+  \begin{figure}[ht!]
+    \includegraphics[width=0.7\linewidth]{fig3.png}
+    \caption{Frequency and Likelihood tables of 'Origin'}
+    \label{fig:fig3}
+  \end{figure}
+  \\ So in our example, we have 3 predictors X.
+  \begin{figure}[ht!]
+    \includegraphics[width=0.7\linewidth]{fig4.png}
+    \label{fig:fig4}
+  \end{figure}
+  \\As per the equations discussed above, we can calculate the posterior probability $P(Yes | X)$ as :
+  \begin{figure}[ht!]
+    \includegraphics[width=0.7\linewidth]{fig5.png}
+    \label{fig:fig5}
+  \end{figure}
+  \\ and, $ P(No|X)$:
+  \begin{figure}[ht!]
+    \includegraphics[width=0.7\linewidth]{fig6.png}
+    \label{fig:fig6}
+  \end{figure}
+
+  Since $0.144 > 0.048$, Which means given the features Red SUV and Domestic, our example gets classified as ’NO’ the car is not stolen.
+% \section{Unique Features}
+
+% We did some experiments \ldots
+
+% \pagebreak
+
+\section{Some Questions}
+1. What are some benefits of Naive Bayes?\\
+\textbf{Ans.} \\
+2. What are the cons of Naive Bayes classifier? \\
+\textbf{Ans.} \\
+3. Is Naive Bayes is a discriminative classifier or generative classifier? \\ 
+\textbf{Ans} \\
+4. While calculating the probability of a given situation, what error can we run into in Naïve Bayes and how can we solve it? \\
+\textbf{Ans.}  \\         
+5.What is the best dataset scenario for the Naïve Bayes Classifier?\\
+\textbf{Ans} \\
+6. How does Naïve Bayes treat numerical and categorical values? \\
+\textbf{Ans} \\
+\bibliographystyle{abbrv}
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
