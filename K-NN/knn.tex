@@ -1,0 +1,96 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\title{KNN Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item K-NN algorithm is one of the easiest algorithm which can be used for Regression as well as for Classification but mostly it is used for the Classification problems.
+    \item  The KNN algorithm assumes that similar things exist in close proximity. In other words, similar things are near to each other.
+    \item K-NN algorithm stores all the available data and classifies a new data point based on the \\similarity with the available datas
+\end{itemize}
+\textbf{Example:}\\
+ Suppose, we have an image of a creature that looks similar to cat and dog, but we want to know either it is a cat or dog. So for this identification, we can use the KNN algorithm, as it works on a similarity measure. Our KNN model will find the similar features of the new data set to the cats and dogs images and based on the most similar features it will put it in either cat or dog category.
+ \begin{figure}[ht!]
+    \includegraphics[width=0.674\linewidth]{fig7.png}
+    \caption{Example}
+    \label{fig:fig7}
+  \end{figure}
+
+\section{Key Points of the Algorithm}
+Let’s take a simple case to understand this algorithm. Suppose there are two categories 
+: Following is a spread of orange circles and green circles . Now, suppose we have a new data point x1, so we have to classify this data point in one of the categories 
+based on it's similarity. We can use K-NN to accomplish this classification task :\\
+\begin{figure}[ht!]
+    \includegraphics[width=0.6\linewidth]{fig8.png}
+    \caption{Classification using K-NN}
+    \label{fig:fig8}
+  \end{figure}
+\vspace{3mm}\\
+\textbf{But How does it work ?}  \\
+
+
+The K-NN working can be explained on the basis of the below algorithm:
+\begin{itemize}
+    \item Select the number 'K' of the neighbors.(how to know what to select is discussed later)
+    \item Calculate the Euclidean distance of the new test obseravtion from all the observation of the training dataset 
+    \item Take the K nearest neighbors as per the calculated Euclidean distance.
+    \item Among these k neighbors, count the number of the data points in each category.
+    \item Assign the new data points to that category for which the number of the neighbor is maximum.
+\end{itemize}
+\textbf{Euclidean distance: }The Euclidean distance is the distance between two points calculated as:
+\begin{figure}[h!]
+    \includegraphics[width=0.42\linewidth]{fig9.png}
+    \label{fig:fig9}
+  \end{figure}
+
+\pagebreak
+Suppose we have a new data point and we need to put it in the required category. Consider the below image:\\
+\begin{figure}[ht!]
+    \includegraphics[width=0.6\linewidth]{fig10.png}
+    \label{fig:fig10}
+  \end{figure}
+  \\By calculating the Euclidean distance we got the nearest neighbors, as three nearest neighbors in category A and two nearest neighbors in category B. Consider the below image:
+  \begin{figure}[ht!]
+    \includegraphics[width=0.6\linewidth]{fig11.png}
+    \label{fig:fig11}
+  \end{figure}
+  \\ As we can see the 3 nearest neighbors are from category A compared to 2 from category B, hence this new data point must belong to category A.
+
+
+\section{Some Questions}
+\textbf{1. How to select the value of K in the K-NN Algorithm?}\\
+\textbf{Ans}\\
+2. What are the cons of KNN? \\
+\textbf{Ans.} \\
+3. Why do you need to scale your data for the k-NN algorithm? \\ 
+\textbf{Ans} \\
+4. Why should we not use the KNN algorithm for large datasets? \\
+\textbf{Ans.}  \\          
+5. How to handle categorical variables in the KNN Algorithm?\\
+\textbf{Ans}  \\
+\bibliographystyle{abbrv}
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
