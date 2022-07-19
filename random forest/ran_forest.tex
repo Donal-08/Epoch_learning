@@ -1,0 +1,97 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\title{Random Forest Algorithm Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item Random forest is a Supervised Machine Learning Algorithm that is used widely in Classification and Regression problems.
+    \item  It builds decision trees on different samples and takes their majority vote for classification and average in case of regression.
+    \item \textbf{Has higher accuracy than Decision trees though built out of Decision Trees :} as it is based on the concept of \textbf{ensemble learning}, 
+    which is a process of combining multiple classifiers to solve a complex problem and to improve the performance of the model.
+    \item As it relies not only on one Decision Tree but greater number of trees in the forest it yields higher accuracy and solves the problem of overfitting.
+\end{itemize}
+ \begin{figure}[ht!]
+    \includegraphics[width=0.6\linewidth]{fig18.png}
+    \label{fig:fig18}
+    \caption{Ensemble learning : Working of a Random Forest}
+  \end{figure}
+\pagebreak
+\section{Key Points of the Algorithm}
+The fundamental concept behind random forest is a simple but powerful one — the wisdom of crowds.\\
+\textbf{“A large number of relatively uncorrelated models(trees) operating as a committee will outperform any of the individual constituent models.”}\\
+The low correlation between models is the key.\\
+The reason why Random forest produces exceptional results is that the trees protect each other from their individual errors. \\
+\textbf{Steps of the algorithm }\\
+\textbf{Step 1: Bagging or Bootstrap Aggregation}\\
+The random forest allows each 
+individual tree to randomly sample from the dataset with \textbf{replacement} (allowing repitition), resulting in different trees. This process is called Bagging.\\
+\textbf{NOTE :} Here, we are not subsetting the training data into smaller chunks and training each tree on a different chunk. Rather, if we have a sample of size N, we are still feeding each tree a training set of size N.
+ But instead of the original training data, we take a random sample of size N with replacement.
+\begin{figure}[ht!]
+    \includegraphics[width=0.6\linewidth]{fig1.jpeg}
+    \caption{Bagging(with replacement)}
+    \label{fig:fig1}
+  \end{figure}
+\vspace{3mm}\\
+\textbf{Step 2: Random feature selection}  \\
+In a normal decision tree, when it is time to split a node, we consider every possible feature and pick the one that seperates the best.
+While in contrast, each tree in a random forest can pick only from a random subset of features. This ultimately results in low correlation across trees. And we just build the tree as usual, but only considering a random subset of variables at each step
+\\ We built a tree using .....
+\begin{enumerate}
+  \item Using a bootstrapped datset (N)
+  \item Only consid a random subset of variables/features ('k') at each step.
+\end{enumerate}
+\pagebreak
+\begin{figure}[h!]
+  \includegraphics[width=0.6\linewidth]{fig2.jpeg}
+  \caption{Bagging(with replacement)}
+  \label{fig:fig2}
+\end{figure}
+\section{Some Questions}
+1. Write a Pseudo Code for the Random Forest algorithm\\
+\textbf{Ans: }Random Forest creation pseudocode:
+\begin{itemize}
+  \item Randomly select “k” features from total “m” features where k << m
+  \item Among the “k” features, calculate the node “d” using the best split point
+  \item Split the node into daughter nodes using the best split
+  \item Repeat the 1 to 3 steps until some "max\_num" number of nodes has been reached
+  \item Build forest by repeating steps 1 to 4 for “n” number times to create “n” number of trees.
+\end{itemize}
+2. What is Out-of-Bag Error?\\
+\textbf{Ans.} \\
+3.  Why does the Random Forest algorithm not require split sampling
+methods?\\ 
+\textbf{Ans} \\
+4. Prove that in the Bagging method only about 63\% of the total
+original examples (total training set) appear in any of sampled
+bootstrap datasets. Provide proper justification. \\
+\textbf{Ans.}  \\         
+5.How does random forest define the Proximity (Similarity) between
+observations?\\
+\textbf{Ans} \\
+\bibliographystyle{abbrv}
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
