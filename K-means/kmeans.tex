@@ -1,0 +1,116 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\title{K-Means Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item K-Means Clustering is an Unsupervised Learning algorithm, which groups the unlabeled dataset into different clusters.
+    \item  The number of clusters found from data by the method is denoted by the letter ‘K’ in K-means.
+    \item The ‘means’ in the K-means refers to averaging of the data; that is, finding the centroid.
+    \item the K-means algorithm identifies k number of centroids, and then allocates every data point to the nearest cluster, while keeping the centroids as small as possible.
+\end{itemize}
+ \begin{figure}[ht!]
+    \includegraphics[width=0.7\linewidth]{fig12.png}
+    \label{fig:fig12}
+  \end{figure}
+\pagebreak
+\section{Key Points of the Algorithm}
+Let’s take a simple example to understand this algorithm. So imagine you have a set of numerical data of cancer tumors in 
+malignant or benign. However, you have no idea how to identify which tumor is what because nobody had the time to label the entire set of features (most data in the world are unlabeled). 
+In this case, you need K-means algorithm because it works on unlabeled numerical data and it will automatically and quickly group them together into 2 clusters.\\
+\textbf{NOTE :} For this example, we chose k=2 because, we already know it can either be malignant/benign
+ But what if we don't actually know what the value of 'k' is ? There is a solution for it \vspace{4mm}\\  
+\textbf{Steps of the algorithm }\\
+\textbf{Step 1: Initialization}\\
+The first thing k-means does, is randomly choose K examples (data points) from the dataset or any random K points
+(the blue and orange points) as initial centroids and that’s simply because it does not know yet where the center of each cluster is. (a centroid is the center of a cluster).
+\begin{figure}[ht!]
+    \includegraphics[width=0.6\linewidth]{fig13.png}
+    \caption{Initialization of centroids}
+    \label{fig:fig13}
+  \end{figure}
+\vspace{3mm}\\
+\textbf{Step 2: Cluster Assignment}  \\
+Then, all the data points that are the closest (similar) to a centroid will create a cluster. 
+If we’re using the Euclidean distance between data points and every centroid, a straight line is drawn
+ between two centroids, then a perpendicular bisector (boundary line) divides this line into two clusters.\\
+ From the above image, it is clear that points left side of the line is near to the K1 or blue centroid, and points to the right of the line are close to the yellow centroid. 
+ Let's color them as blue and yellow for clear visualization.
+\pagebreak
+
+\begin{figure}[h!]
+    \includegraphics[width=0.5\linewidth]{fig14.png}
+    \label{fig:fig14}
+    \caption{Cluster assignment}
+  \end{figure}
+
+\textbf{Step 3: Move the centroid}\\
+Now, we have new clusters, that need centers. A centroid’s new value is going to be the mean of all the examples in a cluster.
+We’ll keep repeating step 2 and 3 until the centroids stop moving, in other words, K-means algorithm is converged.
+\begin{figure}[h!]
+    \includegraphics[width=0.5\linewidth]{fig16.png}
+    \label{fig:fig16}
+    \caption{Changing Centroids}
+  \end{figure} 
+  \pagebreak
+\\Here is the k-means algorithm as a psuedo code :\\
+\begin{figure}[h!]
+    \includegraphics[width=0.6\linewidth]{fig15.png}
+    \label{fig:fig15}
+    \caption{Pseudo code}
+  \end{figure} \\
+\textbf{Unlucky Centroids }
+\begin{figure}[h!]
+    \includegraphics[width=0.6\linewidth]{fig17.png}
+    \label{fig:fig17}
+    \caption{The blue and red stars are unlucky centroids :(}
+  \end{figure}
+  \\Choosing poorly the random initial centroids will take longer to converge or get stuck on local optima which may result in bad clustering. in the picture above, the blue and red stars are unlucky centroids.
+  There are two solutions: 
+  \begin{itemize}
+    \item Distribute them over the space.
+    \item Try different sets of random centroids, and choose the best set.
+  \end{itemize}
+\pagebreak
+\section{Some Questions}
+1. Is Feature Scaling required for the K means Algorithm?\\
+\textbf{Ans}\\
+2. Why is the plot of the within-cluster sum of squares error (inertia) vs
+K in K means clustering algorithm elbow-shaped? Discuss if there
+exists any other possibility for the same with proper explanation. \\
+\textbf{Ans.}\\
+3. What are the challenges associated with K means Clustering?\\ 
+\textbf{Ans} \\
+4. What are the ways to avoid the problem of initialization sensitivity in
+the K means Algorithm? \\
+\textbf{Ans.}  \\          
+5. How to decide the optimal number of K in the K means Algorithm?\\
+\textbf{Ans} \\
+6. How does Naïve Bayes treat numerical and categorical values? \\
+\textbf{Ans} \\
+\bibliographystyle{abbrv}
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
