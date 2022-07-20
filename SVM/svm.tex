@@ -1,0 +1,97 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\title{SVM Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item A Support Vector Machine (SVM) is a supervised machine learning algorithm that can be employed for both classification and regression purposes
+    \item  SVMs are based on the idea of finding a hyperplane that best divides a dataset into two classes so that we can easily put the new data point in the 
+    correct category in the future. This best decision boundary is called a \textbf{hyperplane}.
+    \item SVM chooses the extreme points/vectors that help in creating the hyperplane. These extreme cases are called as \textbf{support vectors}
+    \item Consider the below image to get a clear picture od \textbf{hyperplane} and \textbf{support vector}
+\end{itemize}
+ \begin{figure}[ht!]
+    \includegraphics[width=0.6\linewidth]{fig19.png}
+    \label{fig:fig18}
+    \caption{Illustration of support vectors and hyperplane}
+  \end{figure}
+\pagebreak
+\textbf{Support Vectors: }Support vectors are the data points nearest to the hyperplane, the points of a data set that, if removed, would alter the position of the dividing hyperplane.\\
+\textbf{Hyperplane: } The best decision boundary that helps to classify the data points in n-dimensional space. The dimensions of the hyperplane
+depend on the features present in the dataset\\
+2 features (as shown in image)$\implies$ hyperplane is a straight line. \\
+And 3 features $\implies$ hyperplane is a 2-dimension plane and so on .........
+\section{Key Points of the Algorithm}
+The fundamental concept behind SVM is to find the right hyperplane\\
+\textbf{Goal of the algorihtm: } The distance between the hyperplane and the nearest data point from either set is known as the margin. The goal is to choose a hyperplane with the greatest possible margin between the hyperplane and any point within the training set, giving a greater chance of new data being classified correctly.\\
+\textbf{The algorithm: With a linearly seperable example -}\\
+Suppose we have a dataset that has two tags (green and blue), and the dataset has two features X1 and X2. We want a classifier that can classify the pair(x1, x2) of coordinates in either green or blue.
+There may be multiple hyperplanes(here a line) that can perform the separation. Consider the image: 
+\begin{figure}[ht!]
+    \includegraphics[width=0.39\linewidth]{fig20.png}
+    \label{fig:fig20}
+  \end{figure}
+  \\ The algorithm finds the closest point of the lines from both the classes(Support vectors).
+  The distance between the vectors and the hyperplane is called as \textbf{margin}. And the goal of SVM is to maximize this margin. It was found that the \textbf{green hyperplane} is the \textbf{optimal} hyperplane
+  \begin{figure}[ht!]
+    \includegraphics[width=0.4\linewidth]{fig21.png}
+    \label{fig:fig21}
+  \end{figure}
+\\ \textbf{NON-LINEAR SVM -}  In the scenario below, we can’t have linear hyper-plane between the two classes, so how does SVM classify these two classes? \\
+\begin{figure}[h!]
+\includegraphics[width=0.45\linewidth]{SVM.png}
+\label{fig:fig22}
+\caption{Non-linear SVM}
+\end{figure} \\
+SVM can solve this problem. It solves this problem by introducing additional feature. Here, we will add a new feature $z=x^2+y^2$. By adding the third dimension, the sample space will become as below image.Now, let’s plot the data points on axis x and z:
+\begin{figure}[h!]
+    \includegraphics[width=0.45\linewidth]{SVM1.png}
+    \label{fig:fig23}
+    \caption{SVM}
+    \end{figure}
+\\ In above plot, points to consider are:
+\begin{itemize}
+\item All values for z would be positive always because z is the squared sum of both x and y
+\item In the original plot, red circles appear close to the origin of x and y axes, leading to lower value of z and star relatively away from the origin result to higher value of z.
+\end{itemize}
+But how do we know which particular feature to add such that the data becomes linearly sepearble. the SVM  algorithm has a technique called the \textbf{kernel trick}.
+\section{Some Questions}
+1. Does any other vector apart form the supportvector has an influence oon decision boundary ?\\
+\textbf{Ans:} Any instance that is not a support vector (not on the margin boundaries) has no influence whatsoever;
+you could remove them or add more instances, or move them around, and as long as they stay off the
+margin they won’t affect the decision boundary.\\
+2. Can an SVM classifier outputs a confidence score when it classifies an
+instance\\
+\textbf{Ans.} \\
+3. What are hard margin and soft Margin SVM's ?\\ 
+\textbf{Ans} \\
+4. What do you mean by Hinge loss \\
+\textbf{Ans.}  \\         
+5. What is a slack variable ?\\
+\textbf{Ans} \\
+\bibliographystyle{abbrv}
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
