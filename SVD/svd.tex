@@ -1,0 +1,125 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\usepackage{movie15}
+\pagestyle{fancy}
+
+\title{SVD Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item The Singular Value Decomposition (SVD) of a matrix is a factorization of that matrix into three matrices -\textbf{U, S, and V} 
+    \item \textbf{S} is the diagonal matrix of singular values. Think of singular values as the importance values of different features in the matrix
+    \item The \textbf{rank} of a matrix is a measure of the unique information stored in a matrix. Higher the rank, more the information
+    \item \textbf{Eigenvectors} of a matrix are directions of maximum spread or variance of data
+\end{itemize}
+Before we jump into the algorithm of SVD, let us discuss the concept of the \textbf{Rank of a Matrix}
+\vspace{5mm}\\
+\textbf{RANK OF A MATRIX: } The rank of a matrix is the maximum number of linearly independent row (or column) vectors in the matrix.  A vector \textbf{r} is said to be linearly independent of vectors 
+\textbf{r1} and \textbf{r2} if it cannot be expressed as a linear combination of \textbf{r1} and \textbf{r2}.
+\begin{align}
+    r \neq a_1r_1 + a_2r_2
+\end{align}
+The rank of a matrix can be thought of as a representative of the amount of unique information represented by the matrix.
+
+\pagebreak
+\section{Key Points of the Algorithm}
+\begin{itemize}
+    \item Mathematics behind SVD :
+    \begin{itemize}
+        \item The SVD of  mxn matrix A is given by the formula :
+        \begin{align}
+            A = UWV^T 
+        \end{align}
+        where,\\
+         U:  mxn matrix of the orthonormal eigenvectors of $AA^{T}$ (\textbf{Left Singular Vectors})  \\
+        $V^T$: transpose of a nxn matrix containing the orthonormal eigenvectors of $A^{T}A$.\\  
+        W:   a nxn diagonal matrix of the \textbf{singular values (in decreasing order)} which are the square roots of the eigenvalues of $A^{T}A$          .         .
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.7\linewidth]{svd1.png}
+            \label{fig:svd1}
+          \end{figure}
+    \end{itemize}
+    \textbf{What are U and W and V (Given that U and V are orthogonal) ?} 
+    \begin{align}
+        A &= UWV^T \\
+        A^TA &= (VW^TU^T)(UWV^T)  \hspace{16mm}[\because (AB)^T = B^TA^T]\\
+             &= V(W^TW)V   \hspace{28mm}[\because U^TU = I]
+    \end{align}
+    'A' was a rectangular and completely general. But $A^TA$ gives us a positive semidefinite matrix,and needless to say symmetric. 
+    It's \textbf{eigen vectors} should be orthogonal i.e $V$ matrix and the \textbf{eigen-values} are positive and they're the \textbf{squares of the singular values} i.e
+    \begin{align}
+       \lambda \text{ for $A^TA$} = \sigma^2 \text{ for A}
+    \end{align}
+    Similarly from $AA^T$ , we can get $U$
+    \begin{itemize}
+        \item U is the eigenvectors for $AA^T$ , and they have the same eigenvalues
+    \end{itemize}
+    \item  Why is SVD used in Dimensionality Reduction?
+    \begin{itemize}
+        \item You might be wondering why we should go through with this seemingly painstaking decomposition. The reason can be understood by an alternate representation of the decomposition. See the fig below
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.7\linewidth]{svd2.jpg}
+            \label{fig:svd2}
+          \end{figure}
+        \item The decomposition allows us to express our \textbf{original matrix as a linear combination of low-rank matrices.}
+        \item In a practical application, you will observe that only the first few, say k, singular values are large.The rest of the singular values approach zero.
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\linewidth]{svd3.png}
+    \caption{k-rank approximation of A}
+    \label{fig:svd3}
+  \end{figure}
+  The second principal component is calculated in the same way, with the condition that it is uncorrelated with (i.e., perpendicular to) the first principal component and that it accounts for the next highest variance.
+    \end{itemize}  
+\end{itemize}
+
+\section{Some Questions}
+1. Explain the Curse of Dimensionality?\\
+\textbf{Ans.}  \begin{itemize}
+    \item  As the number of features increase, the number of samples increases, hence, the model becomes more complex
+    \item The more the number of features, the more the chances of overfitting. 
+\end{itemize}
+2. What are the pros and cons of Dimensionality Reduction ? \\
+\textbf{Ans. Some advantages for Dimensionality Reduction :-} 
+\begin{itemize}
+\item BETTER VISUALISATION : Dimensionality Reduction helps us visualize the data on 2D plots or 3D plots.
+ \item REDUCED SPACE AND TIME COMPLEXITY : Fewer dimensions mean less computing. Less data means that algorithms train faster.
+\end{itemize}
+\pagebreak
+\textbf{While some drawbacks are :-}
+\begin{itemize}
+    \item LESS INTERPRETABLE FEATURE : Transformed features are often hard to interpret
+     \item Some information is lost, possibly degrading the performance of subsequent training algorithms.
+    \end{itemize}
+3. \\ 
+\textbf{Ans :}\\
+4.   \\
+\textbf{Ans.} \\
+5.  
+\\ \textbf{Ans. } \\
+
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
