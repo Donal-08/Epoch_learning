@@ -1,0 +1,126 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\usepackage{movie15}
+\pagestyle{fancy}
+
+\title{t-SNE Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item (t-SNE) t-Distributed Stochastic Neighbor Embedding is a non-linear dimensionality reduction algorithm used for exploring high-dimensional data
+    \item t-SNE is iterative so unlike PCA you cannot apply it on another dataset
+    \item t-SNE is something called \textbf{nonlinear dimensionality reduction}. What that means is this algorithm allows us to separate data that cannot be separated by any straight line
+\end{itemize}
+\begin{figure}[h!]
+    \includegraphics[width=0.45\linewidth]{fig1.png}
+    \caption{Linearly nonseperable data}
+    \label{fig:fig1}
+  \end{figure}
+
+\section{Key Points of the Algorithm}
+\begin{itemize}
+    \item \textbf{Probability Distribution for high dimensional space} :\\
+    Let the scatter plot below be our dataset.It has 3 different classes and you can easily distinguish them from each other.
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.38\linewidth]{fig2.png}
+        \caption{Scatter plot of the data}
+        \label{fig:scatter}
+      \end{figure}
+
+      \begin{itemize}
+       \item The first part of the algorithm is to create a probability distribution that represents similarities between neighbors. What is “similarity”? 
+       \item “ Similarity of datapoint $x_j$ to datapoint $x_i$ is the conditional probability $p_{j|i}$, that $x_i$ would pick $x_j$ as its neighbor if neighbors were picked in proportion to their 
+       probability density under a Gaussian centered at $x_i$ ".
+       \item We’ve picked one of the points from the dataset. Now we have to pick another point and calculate Euclidean Distance between them $|x_i — x_j|$
+       \begin{figure}[ht!]
+        \centering
+        \includegraphics[width=0.43\linewidth]{fig3.png}
+        \caption{Calculating similarity of $x_i, x_j$}
+        \label{fig:gauss}
+      \end{figure}
+      \item The next part of the original paper states that it has to be \textbf{proportional to probability density under a Gaussian centered at $x_i$}. So we have to generate Gaussian distribution with mean at $x_i$, and place our distance on the X-axis.
+      \item After calculating the first point we have to do the same thing for every single point out there.
+      \begin{figure}[ht!]
+        \centering
+        \includegraphics[width=0.43\linewidth]{fig4.png}
+        \caption{Calculating similarity of $x_i, x_j$ ($\forall i,j$)}
+        \label{fig:gauss_all}
+      \end{figure}
+      \item \textbf{SCALING THE UNSCALED SIMILARITY VALUES :} 
+      \begin{align}
+        \text{scaled score} = \frac{\text{score}}{\text{sum of all scores}}
+      \end{align}
+      \item \textbf{Dealing with different distances :} If we take two points and try to calculate conditional probability between them then values of $p_{i|j}$ and $p_{j|i}$ 
+       will be different:\\
+       The reason for that is because they are coming from two different distributions.
+       \begin{align}
+        p_{ij} = \frac{p_{i|j} + p_{j|i}}{2N}
+      \end{align}
+      \end{itemize}
+
+    \item \textbf{Repeat Step 1, but for corresponding Low-Dimensional Space}:
+    \begin{itemize}
+        \item The next part of t-SNE is to create low-dimensional space with the same number of points as in the original space.
+        \item The goal of this algorithm is to find similar probability distribution in low-dimensional space. The most obvious choice for new distribution would be to use Gaussian again.
+        \item That’s not the best idea, unfortunately. One of the properties of Gaussian is that it has a “short tail” and because of that it creates a crowding problem. 
+        \item To solve that we’re going to use \textbf{t-distribution , (hence the "t" in t-SNE)} with a single degree of freedom
+        \item This gives us a second set of probabilities $(Q_{ij})$ in the low dimensional space.
+        \item The heavy tails allow for better modeling of far apart distances.     
+        \begin{figure}[ht!]
+          \centering
+          \includegraphics[width=0.43\linewidth]{fig5.png}
+          \label{fig:t-distribution}
+        \end{figure}    
+    \end{itemize}
+    \item  \textbf{Low-dimensional space similarity($Q_{ij}$) must reflect those of high-dimensional space ($P_{ij}$) as best as possible :}
+    \begin{itemize}
+        \item We measure the difference between the probability distributions of the two-dimensional spaces using Kullback-Liebler divergence (KL)
+        \item Finally, we use gradient descent to minimize our KL cost function.
+        \item You can treat that gradient as repulsion and attraction between points. A gradient is calculated for each point and describes how “strong” it should be pulled and the direction it should choose
+    \end{itemize}  
+\end{itemize}
+
+% \section{Unique Features}
+
+% We did some experiments \ldots
+
+% \pagebreak
+
+\section{Some Questions}
+1. \\
+\textbf{Ans.}  \\
+2.  \\
+\textbf{Ans.} \\
+3. \\ 
+\textbf{Ans :} \\
+4.  \\
+\textbf{Ans.}
+\\
+5. 
+\\ \textbf{Ans. } \\
+
+
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
