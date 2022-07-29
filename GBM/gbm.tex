@@ -1,0 +1,166 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\usepackage{movie15}
+\pagestyle{fancy}
+
+\title{GBM Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item The \textbf{principle behind boosting algorithms} is first we built a model on the training dataset, then a second model is built to rectify the errors present in the first model.
+    \item This is done by building a new model \textbf{on the errors or residuals of the previous model}.
+    \item When the target column is continuous, we use \textbf{Gradient Boosting Regressor} whereas when it is a classification problem, we use \textbf{Gradient Boosting Classifier}
+    \item The only difference between the two is the \textbf{“Loss function”}
+    \begin{align}
+        &\text{Regression problems} \implies \text{MSE(Mean Squared Error)} \\
+        &\text{Classification problems} \implies \text{(log-likelihood)}
+    \end{align}
+\end{itemize}
+
+
+\section{Key Points of the Algorithm}
+
+    \textbf{Gradient Boosting Regressor with an example}  : Following is a sample from a random dataset where we
+     have to predict the car price based on various features. The target column is price and other features are independent features.
+
+     \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.7\linewidth]{gbm1.png}
+        \label{fig:fig1}
+      \end{figure}
+
+    \begin{itemize}
+        \item Step -1 The first step in gradient boosting is to build a base model to predict the observations in the training dataset.
+        For simplicity we take an average of the target column and assume that to be the predicted value as shown below:-
+
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.7\linewidth]{gbm2.png}
+            \label{fig:fig2}
+          \end{figure}
+
+         Although there is math involved behind this. Mathematically the first step can be written as:
+         \begin{align}
+            F_0(x) = \text{arg min}_\gamma \sum L(y_i,\gamma)
+         \end{align}
+         Here L is our loss function
+
+         $\gamma$ is our predicted value
+         
+         argmin means we have to find a predicted value/$\gamma$ for which the loss function is minimum.
+         Since the target column is continuous our loss function will be:
+         \begin{align}
+            L &= \frac{1}{n} \sum_{i=0}^n(y_i-\gamma_i) \\
+            \frac{dL}{d\gamma} &= -\sum_{i=0}^n(y_i - \gamma_i) = 0 
+         \end{align}
+         If you calculate eq(5) and find the optimal value for $\gamma$, it turns out that it is the average of the observed car price
+        \item Step-2 The next step is to calculate the pseudo residuals which are (observed value – predicted value)
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.7\linewidth]{gbm3.png}
+            \label{fig:fig3}
+          \end{figure}\\
+          This step can be written as :-
+          \begin{align}
+            r_{im} = - \left[\frac{\partial L(y_i,F(x_i))}{\partial F(x_i)}\right]_{F(x)=F_{m-1}(x)} \hspace{10mm} \text{for i=1,2 ...., n}
+          \end{align}
+          Here $F(x_i)$ is the previous model and m is the number of DT made.
+          We are just taking the derivative of loss function w.r.t the predicted value and we have already calculated this derivative: 
+          \begin{align}
+            \frac{dL}{d\gamma} = -(y_i-\gamma_i) &= - \text{(observed$-$predicted)}\\
+            &= - \text{(observed$- 14500$)}  
+          \end{align}
+          The predicted value here is the prediction made by the previous model. In the next step, we will build a model on these 
+          pseudo residuals and make predictions.Because we want to minimize these residuals and minimizing the residuals will eventually 
+          improve our model accuracy \\ 
+          So, using the Residual as target and the original feature Cylinder number, cylinder height, and Engine location we will generate new predictions.\\
+          Let’s say \textbf{$h_m(x)$} is our DT made on these residuals.
+        \item Step- 4 : In this step we find the output values for each leaf of our decision tree. TO find the output we can simply take 
+        the \textbf{average of all the numbers in a leaf}, doesn’t matter if there is only 1 number or more than 1.
+        Mathematically this step can be represented as:
+
+        \begin{align}
+            \gamma_m = \text{arg min}_\gamma \sum_{i=1}^n L(y_i,F_{m-1}(x_i) + \gamma h_m(x_i))
+        \end{align}
+        When m=1 we are talking about the 1st DT and when it is “M” we are talking about the last DT.Let's take an example
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.45\linewidth]{gbm4.png}
+            \caption{Calculating gamma values for each leaves}
+            \label{fig:fig4}
+          \end{figure}\\ 
+          As you can observe , We end up with the average of the residuals in the leaf R2,1.
+          \item Step-5 This is finally the last step where we have to update the predictions of the previous model. It can be updated as:
+          \begin{align}
+            F_m(x) = F_{m-1}(x) + \mu_mh_m(x)
+          \end{align}
+          where m is the number of decision trees made. \\
+          Now to make a new DT our new predictions will be:
+          \begin{align}
+            \text{New Prediction} = (\text{previous pred}) + (\text{learning rate} * \text{the tree made on residuals})
+          \end{align}
+          Here, $F_{m-1}(x)$ is the prediction of the base model (previous prediction), $\mu$ is the learning rate 
+          Let $\mu = 0.1$ , the new prediction now:\\
+          \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.45\linewidth]{gbm5.png}
+            \label{fig:fig5}
+          \end{figure}
+          \item \textbf{When to stop the iteration ?} \\
+           Suppose we want to find a prediction of our first data point which has a car height of 48.8. This data point will go through this decision tree and the output it gets will be multiplied with the learning rate and then added to the previous prediction.
+
+          Now let’s say m=2 which means we have built 2 decision trees and now we want to have new predictions.
+          
+          This time we will add the previous prediction that is $F_1(x)$ to the new DT made on residuals. We will iterate through these steps again and again till the \textbf{loss is negligible.}
+
+          Each time we add a new tree to the prediction, the \textbf{residuals} get smaller.
+    \end{itemize} 
+
+% We did some experiments \ldots
+
+% \pagebreak
+
+\section{Some Questions}
+1. How do we predict the output for a new dataset?\\
+\textbf{Ans.}  I am taking a hypothetical example here just to
+make you understand how this predicts for a new dataset:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{gbm6.png}
+    \label{fig:fig6}
+  \end{figure}\\
+  If a new data point says height = 1.40 comes, it’ll go through all the trees and then will give the prediction. Here we have only 2 trees hence the datapoint will go through these 2 trees and the final output will be $F_2(x).$ \\
+
+2.\\
+\textbf{Ans.} 
+\\
+
+3.\\ 
+\textbf{Ans :} \\
+4.   \\
+\textbf{Ans.} \\
+5. How can you evaluate the performance of a dimensionality reduction algorithm on your dataset?
+\\ \textbf{Ans. } \\
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
