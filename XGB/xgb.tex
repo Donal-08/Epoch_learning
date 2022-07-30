@@ -1,0 +1,138 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{mathtools}
+\usepackage{diffcoeff}
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\usepackage{movie15}
+\pagestyle{fancy}
+
+\title{XGBoost Report}
+\author{Donal Loitam}
+%\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\begin{itemize}
+    \item XGBoost is an advanced implementation of gradient boosting along with some regularization factors.
+    \item XGBoost falls under the category of Boosting techniques in Ensemble Learning.
+\end{itemize}
+
+
+\section{Key Points of the Algorithm}
+
+    \textbf{XGBoost with an example}  :\\ Let’s look at how XGboost works with an example. Here I’ll try to predict a child’s IQ based on age.
+    For any basic assumption in such statistical data, we can take the average IQ and find how much variance(loss) is present.
+    \begin{align}
+        \text{residual} = \text{original value} - \text{predicted value}
+    \end{align}
+     \begin{figure}[h!]
+        \centering
+        \includegraphics[width=0.7\linewidth]{xgb1.png}
+        \label{fig:fig1}
+      \end{figure}\\
+
+    \begin{itemize}
+        \item   So the average of 20, 34, and 38 is 30.67 for simplicity let’s take it as 30.  
+        If we plot a graph keeping y-axis as IQ and x-axis as Age and then we can see the variance in points from the average mark. 
+  
+        At first, our base model$(M_0)$ will give a prediction 30
+
+  
+      We know this model($M_0$) suffers a loss which will have some optimisation in the next model($M_1$)
+  
+      Model M1 will have input as age(independent features) and target as the loss suffered(residuals) in M0. Until now it is the same as the gradient boosting technique.\\
+      For XGboost some new terms are introduced, 
+      \begin{align}
+              &\lambda \rightarrow \text{regularization parameter} \\
+              &\gamma \rightarrow \text{auto tree pruning parameter} \\
+              &\eta \rightarrow \text{how much model will converge} \\
+      \end{align}
+        \item Calculating the similarity score :\\
+          This step can be written as :-
+          \begin{align}
+            \text{similarity} = \frac{(\sum residual)^2}{N+\lambda}
+          \end{align}
+          where, N is the number of residuals. \\
+          \textbf{Note: We are first summing up the residuals and then squaring the $\sum(residuals)$}\\
+          
+          At first let's put  $\lambda =0$, then Similarity Score = $\dfrac{(-10+4+8)^2}{3+0} = 4/3 = 1.33$ 
+
+          Let’s make the decision tree using these residuals and similarity scores. I’ve set the tree splitting criteria as Age $>$10.
+          
+          Again for these two leaves, we calculate the similarity scores which is 100 and 72. 
+          
+        \item After this, we calculate the \textbf{Gain} of splitting the residuals into 2 groups(to evaluate different thresholds)
+        \begin{align}
+            \text{Gain} &= \text{Similarity}_{parent} - \text{similarity}_{left child} - \text{similarity}_{right child}\\
+            \therefore \text{Gain} &= 100+72 - 1.3 = 170.7
+        \end{align}
+          
+          \item \textbf{Pruning trees: }
+          Now we set our $\gamma$, which is a value provided to the model at starting and its used during splitting.
+          
+          If $Gain >\gamma $ then split will happen otherwise not. Let’s assume that $\gamma$ for this problem is 130 then since the gain is greater than 130, further split will occur. By this method, auto tree pruning will be achieved. 
+          
+          The greater the $\gamma$ value more pruning will be done.
+        
+         \textbf{Note: } For regularization and preventing overfitting, we must increase the $\lambda$  which was initially set to 0. But this should be done carefully as greater the $\lambda$  value lesser the Similarity score, lesser the gain and more the pruning.
+          \item \textbf{The learning rate $\eta$}
+          \begin{align}
+            \text{New prediction} = \text{Previous Prediction} + \text{Learning rate} * \text{Output}
+          \end{align}
+          XGboost calls the learning rate as eta and its value is set to 0.3 
+
+For the 2nd reading(Age=15) new prediction = 30 + (0.3 * 6) = 31.8
+
+The outcome is 6 is calculated from the average residuals 4 and 8.
+
+New Residual = 34 – 31.8 = 2.2
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\linewidth]{xgb2.png}
+    \label{fig:fig2}
+  \end{figure}\\
+  This way model M1 will be trained and residuals will keep on decreasing, which means the loss will be optimized in further models.
+    \end{itemize} 
+
+% We did some experiments \ldots
+
+% \pagebreak
+
+\section{Some Questions}
+1. How do we predict the output for a new dataset?\\
+\textbf{Ans.}  I am taking a hypothetical example here just to
+make you understand how this predicts for a new dataset:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{gbm6.png}
+    \label{fig:fig6}
+  \end{figure}\\
+  If a new data point says height = 1.40 comes, it’ll go through all the trees and then will give the prediction. Here we have only 2 trees hence the datapoint will go through these 2 trees and the final output will be $F_2(x).$ \\
+
+2.\\
+\textbf{Ans.} 
+\\
+
+3.\\ 
+\textbf{Ans :} \\
+4.   \\
+\textbf{Ans.} \\
+5. How can you evaluate the performance of a dimensionality reduction algorithm on your dataset?
+\\ \textbf{Ans. } \\
+% \bibliography{references}  % need to put bibtex references in references.bib 
+\end{document}
